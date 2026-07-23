@@ -1,4 +1,18 @@
 import { body } from "express-validator";
+import { validationResult } from "express-validator";
+
+export const validate = (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      message: errors.array()[0].msg,
+      errors: errors.array(),
+    });
+  }
+  next();
+};
 
 export const registerValidation = [
   body("name")
@@ -13,8 +27,7 @@ export const registerValidation = [
     .notEmpty()
     .withMessage("Valid email is required")
     .isEmail()
-    .withMessage("Please enter a valid email")
-    .normalizeEmail(),
+    .withMessage("Please enter a valid email"),
 
   body("password")
     .notEmpty()
@@ -33,10 +46,9 @@ export const emailValidation = [
   body("email")
     .trim()
     .notEmpty()
-    .withMessage("Valid email is required")
+    .withMessage("Email address is required")
     .isEmail()
-    .withMessage("Please enter a valid email")
-    .normalizeEmail(),
+    .withMessage("Please enter a valid email"),
 ];
 
 export const loginValidation = [
@@ -45,9 +57,12 @@ export const loginValidation = [
     .notEmpty()
     .withMessage("Valid email is required")
     .isEmail()
-    .withMessage("Please enter a valid email")
-    .normalizeEmail(),
+    .withMessage("Please enter a valid email"),
 
+  body("password").notEmpty().withMessage("Password is required"),
+];
+
+export const resetPasswordValidation = [
   body("password")
     .notEmpty()
     .withMessage("Password is required")
