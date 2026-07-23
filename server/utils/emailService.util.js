@@ -74,3 +74,24 @@ export const sendVerificationEmail = async (user, verificationUrl) => {
     throw new Error("Failed to send verification email");
   }
 };
+
+export const sendResetPasswordEmail = async (user, resetUrl) => {
+  const transporter = createTransporter();
+  const cleanUrl = resetUrl.trim();
+
+  const message = {
+    from: `"MERN AUTH Support" <${process.env.EMAIL_USER}>`,
+    to: user.email,
+    subject: "Password Reset Request",
+    html: `
+    <div style="font-family: sans-serif; padding: 20px;">
+    <h2>Password Reset </h2>
+    <p>You request a password reset. Click the link below:</p>
+    <a href="${cleanUrl}" style="background-color: #111827; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Reset Password</a>
+    <p>This link expires in 10 minutes.</p>
+    </div>
+    `,
+  };
+
+  await transporter.sendMail(message);
+};
