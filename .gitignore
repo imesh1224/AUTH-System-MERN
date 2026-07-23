@@ -1,0 +1,24 @@
+# This is a comment - Git ignores these lines
+
+# 1. Ignore specific local environment files (contains passwords/API keys)
+.env
+.env.local
+secret_token.txt
+
+# 2. Ignore entire folders
+node_modules
+dist/
+build/
+bin/
+
+# 3. Ignore all files with specific extensions
+*.log
+*.tmp
+*.swp
+
+# 4. Do not ignore a specific file even if it matches a pattern above
+!important.log
+
+# 5. Ignore system-generated files
+.DS_Store
+Thumbs.db
