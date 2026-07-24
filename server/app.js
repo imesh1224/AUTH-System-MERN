@@ -10,6 +10,7 @@ import ratelimiter from "express-rate-limit";
 const app = express();
 
 app.use(helmet());
+
 app.use(
   cors({
     origin: [
@@ -23,21 +24,34 @@ app.use(
   }),
 );
 
-const limiter = ratelimiter({
+app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
+app.use(cookieParser());
+
+const globalLimiter = ratelimiter({
   windowMs: 15 * 60 * 1000,
   max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
   message: {
     success: false,
     message: "Too many requests, please try again later",
   },
 });
 
-app.use("/api/", limiter);
+app.use("/api/", globalLimiter);
 
-app.use(express.json({ limit: "10kb" }));
-app.use(cookieParser());
+const authLimiter = ratelimiter({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  message: {
+    success: false,
+    message:
+      "Too many authentication attempts, please try again after 15 minutes.",
+  },
+});
 
-app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/auth", authLimiter, authRoute);
 app.use("/api/v1/user", userRouter);
 
 app.use(notFound);
