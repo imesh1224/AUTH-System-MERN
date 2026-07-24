@@ -8,14 +8,16 @@ import {
   refreshToken,
   forgotPassword,
   resetPassword,
+  getMe,
 } from "../controllers/auth.controller.js";
 import {
   registerValidation,
   emailValidation,
   loginValidation,
-  validate,
   resetPasswordValidation,
 } from "../middlewares/authValidation.middleware.js";
+import validate from "../middlewares/validate.middleware.js";
+import protect from "../middlewares/auth.middleware.js";
 
 const authRoute = express.Router();
 
@@ -37,5 +39,7 @@ authRoute.post(
   validate,
   resetPassword,
 );
+
+authRoute.get("/me", protect, getMe);
 
 export default authRoute;

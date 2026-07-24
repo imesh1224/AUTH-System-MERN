@@ -303,3 +303,11 @@ export const resetPassword = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getMe = async (req, res, next) => {
+  try {
+    res.status(200).json({ success: true, user: req.user });
+  } catch (error) {
+    next(error);
+  }
+};
