@@ -42,7 +42,7 @@ const globalLimiter = ratelimiter({
 app.use("/api/", globalLimiter);
 
 const authLimiter = ratelimiter({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 10,
   message: {
     success: false,
