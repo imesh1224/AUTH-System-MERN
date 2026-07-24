@@ -9,6 +9,9 @@ import {
   forgotPassword,
   resetPassword,
   getMe,
+  userDashboard,
+  adminDashboard,
+  deleteUser,
 } from "../controllers/auth.controller.js";
 import {
   registerValidation,
@@ -18,6 +21,7 @@ import {
 } from "../middlewares/authValidation.middleware.js";
 import validate from "../middlewares/validate.middleware.js";
 import protect from "../middlewares/auth.middleware.js";
+import { authorize } from "../middlewares/role.middleware.js";
 
 const authRoute = express.Router();
 
@@ -41,5 +45,8 @@ authRoute.post(
 );
 
 authRoute.get("/me", protect, getMe);
+authRoute.get("/user-dashboard", protect, userDashboard);
+authRoute.get("/admin-dashboard", protect, authorize("admin"), adminDashboard);
+authRoute.delete("/users/:id", protect, authorize("admin"), deleteUser);
 
 export default authRoute;
